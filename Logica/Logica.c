@@ -77,18 +77,26 @@ void contarTiposVotosPais( DatosPaises paises, int cantAnios, int* aFavor, int* 
 
 
 
-void encontrarHanVotadoContra( DatosPaises paises[], bool votosEnContra[], int cantPaises, int cantAnios ){
+int encontrarHanVotadoContra( DatosPaises paises[], char nombresPaises[][18], char conVotosEnContra[][18], int cantPaises, int cantAnios ){
 
     int i, j;
+    int cantPaisesEnContra = 0;
+    bool enContra;
+
+    for(i = 0; i < cantPaises; i++){
+        enContra = false;
+
+        for(j = 0; j < cantAnios && !enContra; j++)
+
+            if( paises[i].votos[j] == -1 ) {
+                enContra = true;
+
+                strcpy( conVotosEnContra[ cantPaisesEnContra++ ], nombresPaises[i] );
+            }
+    }
 
 
-    memset(votosEnContra, false, cantPaises);
-
-    for(i = 0; i < cantPaises; i++)
-        for(j = 0; j < cantAnios && !votosEnContra[i]; j++)
-            if( paises[i].votos[j] == -1 ) votosEnContra[i] = true;
-
-
+    return cantPaisesEnContra;
 }
 
 
@@ -101,3 +109,52 @@ void encontrarHanVotadoContra( DatosPaises paises[], bool votosEnContra[], int c
 
 
 
+int encontrarMasFavor( DatosPaises paises[], char nombresPaises[][18], char conMayorCantFavor[][18], int cantPaises, int cantAnios ){
+
+    int i, j;
+    int vecesMayorEncontrado = 0;       //veces que se repite el mayor (en caso de empate)
+    int cantFavorUnPais;                //contador de cuántos votos a favor tiene un país
+    int mayor = 0;                      //mayor cantidad por un país
+
+    for(i = 0; i < cantPaises; i++){
+        cantFavorUnPais = 0;
+
+        for(j = 0; j < cantAnios; j++)
+            if( paises[i].votos[j] == 1 ) cantFavorUnPais++;
+
+        if(mayor < cantFavorUnPais){
+            mayor = cantFavorUnPais;
+            vecesMayorEncontrado = 1;
+            strcpy( conMayorCantFavor[ 0 ], nombresPaises[i] );
+        }
+
+        else if(mayor > 0 && mayor == cantFavorUnPais)
+            strcpy( conMayorCantFavor[ vecesMayorEncontrado++ ], nombresPaises[i] );
+
+    }
+
+
+
+    return vecesMayorEncontrado;
+}
+
+
+
+
+
+
+
+void contarVotosEnAnio( DatosPaises paises[], int anio, int cantPaises, int* aFavor, int* enContra, int* abstenciones ){
+
+    int i;
+    int voto;
+
+    for(i = 0; i < cantPaises; i++){
+        voto = paises[i].votos[anio];
+
+        if( !voto ) (*abstenciones)++;
+        else if( voto == 1) (*aFavor)++;
+        else (*enContra)++;
+    }
+
+}

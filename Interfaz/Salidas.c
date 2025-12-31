@@ -71,10 +71,13 @@ int pedirPais( char nombresPaises[][18], int cantPaises ){
 
 
 
-void mostrarTiposVotosPais(char pais[], int cantAnios, int aFavor, int enContra, int abstenciones){
+void resultadoReporteCantidades(char pais[], int anio, int aFavor, int enContra, int abstenciones, int reporte){
     system("cls");
     encabezado();
-    printf("\nVotos de %s en %d a\244os:\n", pais, cantAnios);
+
+    if (reporte == 1)       printf("\nVotos de %s:\n", pais);
+    else if(reporte == 4)   printf("\nVotos en %d:\n", anio);
+
     printf("\tA favor: %d\n", aFavor);
     printf("\tEn contra: %d\n", enContra);
     printf("\tAbstenciones: %d\n\n", abstenciones);
@@ -87,13 +90,17 @@ void mostrarTiposVotosPais(char pais[], int cantAnios, int aFavor, int enContra,
 
 
 
-void mostrarHanVotadoContra( char nombresPaises[][18], bool votosEnContra[], int cantPaises ){
+void resultadoReporteListas( char salidaReporte[][18], int cantPaisesSalida, int reporte ){
     int i;
-    printf("\n\nPaises que al menos han votado una vez en contra de la resoluci\242n.\n");
 
-    for(i = 0; i < cantPaises; i++)
-        if( votosEnContra[i] )
-            printf("%d. %s\n", i+1, nombresPaises[i]);
+    system("cls");
+    encabezado();
+    if( !reporte )               printf("\nNo se encontraron pa\241ses con las condici\242nes de este reporte.\n");
+    else if( reporte == 2 )      printf("\nPa\241ses que al menos han votado una vez en contra de la resoluci\242n.\n");
+    else if (reporte == 3)       printf("\nPa\241%s con mayor cantidad de votos a favor:\n", cantPaisesSalida > 1 ? "ses" : "s" );
+
+    for(i = 0; i < cantPaisesSalida; i++)
+        printf("%d. %s\n", i+1, salidaReporte[i] );
 
     printf("\n");
 

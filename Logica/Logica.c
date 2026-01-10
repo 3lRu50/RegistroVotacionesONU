@@ -32,20 +32,25 @@ bool esEntero(char cadena[]){
 
 
 
-void inicializarAutomatico( DatosPaises paises[], char nombresPaises[][18], int cantPaises, int anios ){
+void inicializarAutomatico( DatosPaises paises[], int cantPaises, int anios ){
 
     int i, j;
-    char nombres[][18] = { "Cuba", "Usa", "Rusia", "Israel", "Alemania", "Japon", "Francia", "Hungr\241a", "Mali", "Congo" };
+    char nombres[15][18] = {
+        "Cuba", "Usa", "Rusia", "Israel", "Alemania",
+        "Jap\242n", "Francia", "Hungr\241a", "Mali", "Congo",
+        "Corea del Norte", "Corea del Sur", "Chile", "Argentina", "China"
+    };
 
 
     srand( time(NULL) );
 
     for(i = 0; i < cantPaises; i++){
-        strcpy(nombresPaises[i], nombres[i]);//nombres
+        strcpy( paises[i].nombre, nombres[i] );//nombres
 
         for(j = 0; j < anios; j++)//votos
             paises[i].votos[j] = rand() % 3 - 1;
     }
+
 }
 
 
@@ -55,45 +60,86 @@ void inicializarAutomatico( DatosPaises paises[], char nombresPaises[][18], int 
 
 
 
-void contarTiposVotosPais( DatosPaises paises, int cantAnios, int* aFavor, int* enContra, int* abstenciones ){
-    int i;
+
+
+
+
+void actualizarPaises(DatosPaises paises[], int cantPaises, int cantAnios){
+
+    int aFavor, enContra, abstenciones;
     int voto;
-
-    for(i = 0; i < cantAnios; i++){
-        voto = paises.votos[i];
-
-        if( !voto ) (*abstenciones)++;
-        else if( voto == 1) (*aFavor)++;
-        else (*enContra)++;
-    }
-
-}
-
-
-
-
-
-
-
-
-
-int encontrarHanVotadoContra( DatosPaises paises[], char nombresPaises[][18], char conVotosEnContra[][18], int cantPaises, int cantAnios ){
-
     int i, j;
-    int cantPaisesEnContra = 0;
-    bool enContra;
+
 
     for(i = 0; i < cantPaises; i++){
-        enContra = false;
+        aFavor = enContra = abstenciones = 0;
 
-        for(j = 0; j < cantAnios && !enContra; j++)
+        for(j = 0; j < cantAnios; j++){
+            voto = paises[i].votos[j];
 
-            if( paises[i].votos[j] == -1 ) {
-                enContra = true;
+            //discriminar entre tipos de votos
+            if(voto == 1)           aFavor++;
+            else if(voto == -1)     enContra++;
+            else if( !voto )        abstenciones++;
+        }
 
-                strcpy( conVotosEnContra[ cantPaisesEnContra++ ], nombresPaises[i] );
-            }
+        paises[i].total.aFavor = aFavor;
+        paises[i].total.enContra = enContra;
+        paises[i].total.abstenciones = abstenciones;
     }
+
+}
+
+
+
+void actualizarAnios(DatosPaises paises[], DatosTotalVotos totalesAnios[], int cantPaises, int cantAnios){
+
+    int aFavor, enContra, abstenciones;
+    int voto;
+    int i, j;
+
+
+    for(i = 0; i < cantAnios; i++){
+        aFavor = enContra = abstenciones = 0;
+
+        for(j = 0; j < cantPaises; j++){
+            voto = paises[j].votos[i];
+
+            //discriminar entre tipos de votos
+            if(voto == 1)           aFavor++;
+            else if(voto == -1)     enContra++;
+            else if( !voto )        abstenciones++;
+        }
+
+        totalesAnios[i].aFavor = aFavor;
+        totalesAnios[i].enContra = enContra;
+        totalesAnios[i].abstenciones = abstenciones;
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+int encontrarHanVotadoContra( DatosPaises paises[], int salidas[], int cantPaises ){
+
+    int i;
+    int cantPaisesEnContra = 0;
+
+
+    for(i = 0; i < cantPaises; i++)
+        if( paises[i].total.enContra )
+            salidas[ cantPaisesEnContra++ ] = i;
 
 
     return cantPaisesEnContra;
@@ -109,30 +155,23 @@ int encontrarHanVotadoContra( DatosPaises paises[], char nombresPaises[][18], ch
 
 
 
-int encontrarMasFavor( DatosPaises paises[], char nombresPaises[][18], char conMayorCantFavor[][18], int cantPaises, int cantAnios ){
 
-    int i, j;
-    int vecesMayorEncontrado = 0;       //veces que se repite el mayor (en caso de empate)
-    int cantFavorUnPais;                //contador de cuántos votos a favor tiene un país
-    int mayor = 0;                      //mayor cantidad por un país
 
-    for(i = 0; i < cantPaises; i++){
-        cantFavorUnPais = 0;
+int encontrarMasAFavor( DatosPaises paises[], int salidas[], int cantPaises ){
 
-        for(j = 0; j < cantAnios; j++)
-            if( paises[i].votos[j] == 1 ) cantFavorUnPais++;
+    int i;
+    int vecesMayorEncontrado = 0;                 //veces que se repite el mayor (en caso de empate)
+    int mayor = 0;                                //mayor cantidad de votos a favor por un país
 
-        if(mayor < cantFavorUnPais){
-            mayor = cantFavorUnPais;
+
+    for(i = 0; i < cantPaises; i++)
+        if( paises[i].total.aFavor > mayor ){
+            mayor = paises[i].total.aFavor;
+            salidas[0] = i;
             vecesMayorEncontrado = 1;
-            strcpy( conMayorCantFavor[ 0 ], nombresPaises[i] );
         }
-
-        else if(mayor > 0 && mayor == cantFavorUnPais)
-            strcpy( conMayorCantFavor[ vecesMayorEncontrado++ ], nombresPaises[i] );
-
-    }
-
+        else if( paises[i].total.aFavor == mayor && mayor > 0 )
+            salidas[ vecesMayorEncontrado++ ] = i;
 
 
     return vecesMayorEncontrado;
@@ -142,19 +181,3 @@ int encontrarMasFavor( DatosPaises paises[], char nombresPaises[][18], char conM
 
 
 
-
-
-void contarVotosEnAnio( DatosPaises paises[], int anio, int cantPaises, int* aFavor, int* enContra, int* abstenciones ){
-
-    int i;
-    int voto;
-
-    for(i = 0; i < cantPaises; i++){
-        voto = paises[i].votos[anio];
-
-        if( !voto ) (*abstenciones)++;
-        else if( voto == 1) (*aFavor)++;
-        else (*enContra)++;
-    }
-
-}

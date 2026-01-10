@@ -1,10 +1,20 @@
 #ifndef DATOS_H
 #define DATOS_H
 
+
+struct datosTotalVotos{
+    int aFavor;
+    int enContra;
+    int abstenciones;
+};
+
+typedef struct datosTotalVotos DatosTotalVotos;
+
 struct datosPaises{
-    int aniosAnalizados;
-    int votos[34];
-    // se toman 34 ya que se han realizado esa cantidad de votaciones de hasta enero de 2026
+    DatosTotalVotos total;
+
+    char nombre[18];
+    int votos[50];
 };
 
 typedef struct datosPaises DatosPaises;

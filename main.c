@@ -2,10 +2,10 @@
 
 int main(void){
 
-    DatosPaises paises[10];
-    char nombresPaises[10][18];
+    DatosPaises paises[200];
+    DatosTotalVotos anios[50];
 
-    menu(paises, nombresPaises);
+    menu( paises, anios );
 
     return 0;
 }

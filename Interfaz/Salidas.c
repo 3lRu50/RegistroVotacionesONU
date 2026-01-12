@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "Logica/Logica.h"
+#include <ctype.h>
+#include <string.h>
 
 void encabezado(void){
     printf("Ministerio de Relaciones Exteriores.\n");
@@ -19,7 +21,6 @@ int pedirEntero(int limInferior, int limSuperior){
 
 
     do{
-        printf("Elecci\242n: ");
 
         gets(cadena);
         fflush(stdin);
@@ -29,20 +30,257 @@ int pedirEntero(int limInferior, int limSuperior){
 
             if( limInferior <= numero && numero <= limSuperior )
                 numeroValido = true;
+
             else if(limInferior == limSuperior)
-                printf("ERROR: el \243nico valor que puede ingresar es %d.\n\n", limInferior);
+                printf("ERROR: el \243nico valor que puede ingresar es %d.\n", limInferior);
             else
-                printf("ERROR: debe ingresar un valor entre %d y %d.\n\n", limInferior, limSuperior);
+                printf("ERROR: debe ingresar un valor entre %d y %d.\n", limInferior, limSuperior);
         }
         else
-            printf("ERROR: debe ingresar un n\243mero entero.\n\n");
+            printf("ERROR: debe ingresar un n\243mero entero.\n");
 
-
+        if(!numeroValido) printf("Int\202ntelo nuevamente: ");
 
     }while(!numeroValido);
 
     return numero;
 }
+
+
+
+
+
+
+
+
+
+
+
+bool validarNombrePais( DatosPaises paises[], char cadena[], int cantPaises, int maxLetras){
+    bool valido = false;
+
+    bool sonSiglas;
+    int tamanio;
+
+
+    tamanio = strlen(cadena);
+
+    sonSiglas = tamanio <= 3 ? true : false;
+
+
+    if( tamanio < 2)
+        printf("ERROR: debe ingresar al menos 2 caracteres.\n\n");
+
+    else if( tieneSimbolos(cadena, tamanio) )
+        printf("ERROR: la cadena solo puede tener letras.\n\n");
+
+    else if( sonSiglas && !todoMayuscula(cadena, tamanio))
+        printf("ERROR: si ingresa menos de 4 caracteres se concideran siglas y deben ser escritas en may\243scula.\n\n");
+
+    else if( tamanio > maxLetras )
+        printf("ERROR: debe ingresar a lo sumo %d caracteres.\n\n", maxLetras);
+
+    else if( !sonSiglas && !cadenaNormalizada(cadena, tamanio) )
+        printf("ERROR: debe usar may\243scula despu\202s de los espacios y min\243sculas en el resto del nombre (omita la tildes en may\243sculas).\n\n");
+
+    else if( seHaIngresadoPais(paises, cadena, cantPaises ) )
+        printf("ERROR: ya ha ingresado este pa\241s.\n\n");
+
+    else valido = true;
+
+
+    return valido;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+int pedirNombresPaises( DatosPaises paises[], int maxLetras ){
+    system("cls");
+    encabezado();
+
+    bool fin = false;
+    int cantPaises = 0;
+
+    bool entradaValida;
+    char entrada[25];
+
+
+
+    printf("Introduzca los nombres de los pa\241ses (FIN para terminar):\n\n");
+    do{
+
+        do{
+            entradaValida = true;
+
+
+            printf("Pa\241s %d: ", cantPaises + 1);
+            gets(entrada);
+            fflush(stdin);
+
+
+            if( !strcmp(entrada, "FIN") )
+                fin = true;
+
+            else if( validarNombrePais(paises, entrada, cantPaises, maxLetras) )
+                strcpy( paises[ cantPaises++ ].nombre, entrada);
+
+
+            else entradaValida = false;
+
+
+
+        }while(!entradaValida);
+
+    }while( cantPaises < 200 && !fin );
+
+
+    return cantPaises;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+bool tomarDecision(void){
+    bool decision;
+    bool decisionValida;
+    char cadena[5];
+
+    do{
+        decisionValida = true;
+        printf("Decisi\242n: ");
+
+        gets(cadena);
+        fflush(stdin);
+
+        if( !strcmp(cadena, "SI") )
+            decision = true;
+        else if( !strcmp(cadena, "NO") )
+            decision = false;
+
+        else{
+            decisionValida = false;
+            printf("ERROR: solo puede ingresar SI o NO.\n\n");
+        }
+
+    }while(!decisionValida);
+
+
+    return decision;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void tomarVotosAnio( DatosPaises paises[], int cantPaises, int anio ){
+
+    int i;
+
+
+    printf("Introduzca los votos del a\244o %d:\n\n", anio + 1992);
+
+    for(i = 0; i < cantPaises; i++){
+        printf("%17s: ", paises[i].nombre);
+
+        paises[i].votos[anio] = pedirEntero(-1, 1);
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+int tomarVotos( DatosPaises paises[], int cantPaises ){
+    int i;
+    bool seguir = true;
+
+    for(i = 0; i < 50 && seguir; i++){
+        system("cls");
+        encabezado();
+
+        printf("Tipos de votos:\n");
+        printf("\t 1 --> A favor\n");
+        printf("\t 0 --> Abstenci\242n\n");
+        printf("\t-1 --> En Contra\n\n\n\n");
+
+        tomarVotosAnio(paises, cantPaises, i);
+
+        printf("\n\nDesea ingresar votos para %d (SI o NO)?\n", 1993 + i);
+        seguir = tomarDecision();
+    }
+
+
+    return i;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -57,9 +295,28 @@ int pedirPais( DatosPaises paises[], int cantPaises ){
     for(i = 0; i < cantPaises; i++)
         printf("%3d. %s\n", i+1, paises[i].nombre);
     printf("\n\n");
+    printf("Pa\241s: ");
 
 
     return pedirEntero(1, cantPaises) - 1;
+}
+
+
+
+
+
+
+///////comprobar cantidad de años
+/// innecesaria
+int pedirAnio( int cantAnios ){
+
+    if( !cantAnios )
+        printf("Ingrese el \243nico a\244o ingresado (1992).\n\n");
+    else
+        printf("Introduzca un pa\241s entre 1992 y %d.\n\n", 1992 + cantAnios);
+
+    printf("A\244os: ");
+    return pedirEntero(1, cantAnios) - 1;
 }
 
 
@@ -79,6 +336,12 @@ void resultadoReporteCantidades(int aFavor, int enContra, int abstenciones){
     printf("\tEn contra: %d\n", enContra);
     printf("\tAbstenciones: %d\n\n", abstenciones);
 }
+
+
+
+
+
+
 
 
 
@@ -107,6 +370,12 @@ void resultadoReporteListas( DatosPaises paises[], int salidas[], int cantSalida
         printf("\n");
     }
 }
+
+
+
+
+
+
 
 
 
@@ -145,8 +414,13 @@ void mostrarTablaPaises( DatosPaises paises[], int cantPaises, int cantAnios ){
         }
     }
 
-
 }
+
+
+
+
+
+
 
 
 

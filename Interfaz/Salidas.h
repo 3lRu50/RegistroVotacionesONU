@@ -4,9 +4,17 @@
 
 void encabezado(void);
 
+//validación
+bool validarNombrePais( DatosPaises paises[], char cadena[], int cantPaises, int maxLetras);
+
 //solicitar datos
 int pedirEntero(int limInferior, int limSuperior);
 int pedirPais( DatosPaises paises[], int cantPaises );
+int pedirAnio( int cantAnios );
+int pedirNombresPaises( DatosPaises paises[], int maxLetras );
+int tomarVotos( DatosPaises paises[], int cantPaises );
+void tomarVotosAnio( DatosPaises paises[], int ptrCantPaises, int anio );
+bool tomarDecision(void);
 
 //reportes
 void resultadoReporteCantidades(int aFavor, int enContra, int abstenciones);

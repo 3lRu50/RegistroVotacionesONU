@@ -13,7 +13,7 @@ bool esEntero(char cadena[]){
     int tamanio = strlen(cadena);
 
 
-    if( cadena[0] == '-' || isdigit(cadena[0]) ){
+    if( (cadena[0] == '-'  && isdigit(cadena[1])) || isdigit(cadena[0]) ){
 
         for(i = 1; i < tamanio && valido; i++)
             if( !isdigit(cadena[i]) )
@@ -32,13 +32,154 @@ bool esEntero(char cadena[]){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+//////validaciones letras
+bool tieneSimbolos(char cadena[], int longitud){
+    bool tieneSimb = false;             //tiene un simbolo
+    int i;
+
+
+
+    bool tildeOenie;        //tiene tildeOeñe
+
+    for(i = 0; i < longitud && !tieneSimb; i++){
+
+        tildeOenie =  (cadena[i] >= -96 && cadena[i] <= -92) || cadena[i] == -126;
+
+        //De Morgan
+        if( !(isalpha(cadena[i]) || isspace(cadena[i]) || tildeOenie) )
+            tieneSimb = true;
+    }
+
+    return tieneSimb;
+}
+    ///los valores (como -92) que uso, los obtuve como sigue:
+    ///
+    ///char cadena[];
+    ///
+    ///gets(entrada);
+    ///printf("%d ", entrada[0]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+//la idea es ver si la posicion después del espacio es mayúscula
+bool cadenaNormalizada(char cadena[], int tamanio){
+    int i;
+    int posUltiMay = 0;
+
+    char *posEspacio = strchr(cadena, ' ');
+    bool normalizado = isupper(cadena[0]);
+
+
+
+    for(i = 0; i < tamanio && normalizado; i++)
+
+        //comprueba que haya una mayuscula después del espacio
+        if( &cadena[i] == posEspacio )
+            if( isupper(cadena[i+1]) ){
+                posUltiMay = i+1;
+                posEspacio = strchr( posEspacio+1, ' ');
+            }
+
+            else normalizado = false;
+
+        //comprueba si el caracter que no esta en el inicio es minuscula
+        else if(i != posUltiMay && isupper(cadena[i]) )
+            normalizado = false;
+
+
+    return normalizado;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+bool seHaIngresadoPais(DatosPaises paises[], char pais[], int cantPaises){
+    bool yaIngresado = false;
+    int i;
+
+    for(i = 0; i < cantPaises; i++)
+        if( !strcmp( paises[i].nombre, pais ) )
+            yaIngresado = true;
+
+    return yaIngresado;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+bool todoMayuscula(char cadena[], int tamanio){
+    bool siglas = true;
+    int i;
+
+    for(i = 0; i < tamanio; i++)
+        if( islower(cadena[i]) )
+            siglas = false;
+
+    return siglas;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void inicializarAutomatico( DatosPaises paises[], int cantPaises, int anios ){
 
     int i, j;
     char nombres[15][18] = {
         "Cuba", "Usa", "Rusia", "Israel", "Alemania",
         "Jap\242n", "Francia", "Hungr\241a", "Mali", "Congo",
-        "Corea del Norte", "Corea del Sur", "Chile", "Argentina", "China"
+        "Corea Del Norte", "Corea Del Sur", "Chile", "Argentina", "China"
     };
 
 
@@ -64,6 +205,10 @@ void inicializarAutomatico( DatosPaises paises[], int cantPaises, int anios ){
 
 
 
+
+
+
+//recorre filas
 void actualizarPaises(DatosPaises paises[], int cantPaises, int cantAnios){
 
     int aFavor, enContra, abstenciones;
@@ -92,6 +237,18 @@ void actualizarPaises(DatosPaises paises[], int cantPaises, int cantAnios){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+//recorre columnas
 void actualizarAnios(DatosPaises paises[], DatosTotalVotos totalesAnios[], int cantPaises, int cantAnios){
 
     int aFavor, enContra, abstenciones;

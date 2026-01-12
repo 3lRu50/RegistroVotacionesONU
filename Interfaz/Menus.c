@@ -6,51 +6,142 @@
 
 
 
+void menuInicializacionManual( DatosPaises paises[], int* ptrCantPaises, int* ptrCantAnios, bool* ptrSeInicializo, bool* ptrDatosActualizados){
+        bool atras = false;
 
-bool menuInicializarDatos(DatosPaises paises[], int* ptrCantPaises, int* ptrCantAnios){
+        do{
+            system("cls");
+            encabezado();
+            printf("Introduzca la opci\242n deseada.\n\n");
+            printf("1. Ingresar datos\n");
+            printf("2. Mostrar tabla de votos\n");
+            printf("3. Editar nombre de un pa\241s\n");
+            printf("4. Editar votos de un a\244o\n");
+            printf("5. Editar voto de un pa\241s en un a\244o determinado\n");
+            printf("6. Eliminar pa\241s.\n");
+            printf("7. Atr\240s\n\n");
 
-    system("cls");
 
-    bool opcionValida;
-    bool seInicializo = false;
-    int opcion;
+            printf("Opci\242n: ");
 
-    do{
-        opcionValida = true;
+            switch( pedirEntero(1, 7) ){
+                case 1:
+                    if( *ptrSeInicializo ){
+                        printf("Si vuelve a inicializar los datos estos se sobreescribir\240n.\n");
+                        printf("Desea hacerlo (SI o NO)?\n\n");
+                    }
 
+
+
+                    if(!*ptrSeInicializo || tomarDecision()){
+
+                        *ptrCantPaises = pedirNombresPaises(paises, 17);
+
+                        if(*ptrCantPaises > 0){
+                            *ptrCantAnios = tomarVotos(paises, *ptrCantPaises);
+                            *ptrSeInicializo = true;
+                        }
+                        else
+                            *ptrSeInicializo = false;
+                            *ptrDatosActualizados = false;
+                    }
+                    break;
+
+
+                case 2:
+                    if(!*ptrSeInicializo)
+                        printf("ERROR: primero debe inicializar los datos.\n\n");
+                    else
+                        mostrarTablaPaises(paises, *ptrCantPaises, *ptrCantAnios);
+
+                    system("pause");
+                    break;
+
+
+
+                case 3:
+                    printf("IMPLEMENTE\n");
+                    break;
+                case 4:
+                    printf("IMPLEMENTE\n");
+                    break;
+                case 5:
+                    printf("IMPLEMENTE\n");
+                    break;
+
+                case 6:
+                    printf("IMPLEMENTE\n");
+                    break;
+
+                case 7:
+                    atras = true;
+                    break;
+            }
+
+        }while( !atras );
+
+
+        if( *ptrCantAnios <= 0 || *ptrCantPaises <= 0 ){
+            *ptrSeInicializo = false;
+            *ptrDatosActualizados = false;
+            printf("No existen los datos.\n\n");
+        }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+void menuInicializarDatos(DatosPaises paises[], int* ptrCantPaises, int* ptrCantAnios, bool* ptrSeInicializo, bool* ptrDatosActualizados){
+
+        system("cls");
         encabezado();
         printf("Introduzca c\242mo desea inicializar los datos.\n\n");
         printf("1. Autom\240ticamente\n");
         printf("2. Manualmente\n");
         printf("3. Atr\240s\n\n");
 
-        opcion = pedirEntero(1, 3);
+
+        printf("Opci\242n: ");
 
 
-        switch(opcion){
+        switch( pedirEntero(1, 3) ){
             case 1:
-                printf("\n\nIngrese la cantidad de pa\241ses que desea usar (a lo sumo 15): ");
-                *ptrCantPaises = pedirEntero(1, 15);
-                //////cambiar que no sea manual lo maximos
-                printf("\n\nIngrese la cantidad de a\244os que desea usar (a lo sumo 50): ");
-                *ptrCantAnios = pedirEntero(1,50);
+                if( *ptrSeInicializo ){
+                    printf("\n\nSi vuelve a inicializar los datos estos se sobreescribir\240n.\n");
+                    printf("Desea hacerlo?\n\n");
+                }
 
-                inicializarAutomatico(paises, *ptrCantPaises, *ptrCantAnios);
-                seInicializo = true;
+                if( !*ptrSeInicializo || tomarDecision() ){
+
+                    printf("\n\nIngrese la cantidad de pa\241ses que desea usar (a lo sumo 15): ");
+                    *ptrCantPaises = pedirEntero(1, 15);
+
+                    printf("\n\nIngrese la cantidad de a\244os que desea usar (a lo sumo 50): ");
+                    *ptrCantAnios = pedirEntero(1,50);
+
+                    inicializarAutomatico(paises, *ptrCantPaises, *ptrCantAnios);
+                    *ptrSeInicializo = true;
+                    *ptrDatosActualizados = false;
+                }
+
                 break;
 
             case 2:
-                printf("IMPLEMENTE");
-                //////////cantPaises = inicializar(paises);
-                seInicializo = true;
+                menuInicializacionManual(paises, ptrCantPaises, ptrCantAnios, ptrSeInicializo, ptrDatosActualizados);
                 break;
 
             case 3:break;
         }
 
-    }while(!opcionValida);
 
-    return seInicializo;
 }
 
 
@@ -64,7 +155,7 @@ void menuReportes(DatosPaises paises[], DatosTotalVotos totalesAnios[], int cant
 
     system("cls");
 
-    bool opcionValida;                  //bandera que termina el bucle si ingresa un reporte correcto
+    bool atras = false;
     int pais;                           //pais que desea analizar en el reporte
     int anio;
 
@@ -74,7 +165,6 @@ void menuReportes(DatosPaises paises[], DatosTotalVotos totalesAnios[], int cant
 
 
     do{
-        opcionValida = true;
 
         encabezado();
         printf("Ingrese el reporte deseado.\n\n");
@@ -84,6 +174,7 @@ void menuReportes(DatosPaises paises[], DatosTotalVotos totalesAnios[], int cant
         printf("4. Cantidad de votos a favor, en contra y abstenciones en un a\244o determinado.\n");
         printf("5. Atr\240s.\n\n");
 
+        printf("Opci\242n: ");
 
         switch( pedirEntero(1, 5) ){
             case 1:
@@ -106,17 +197,25 @@ void menuReportes(DatosPaises paises[], DatosTotalVotos totalesAnios[], int cant
 
             case 4:
                 printf("\n\nIntroduzca el a\244o del que desea controlar las votaciones (1992 - %d).\n\n", 1992 + cantAnios - 1);
+                printf("A\244o: ");
                 anio = pedirEntero(1992, 1992 + cantAnios - 1) - 1992;
 
                 printf("\nVotos en %d:\n", anio + 1992);
                 resultadoReporteCantidades( totalesAnios[anio].aFavor , totalesAnios[anio].enContra, totalesAnios[anio].abstenciones );
                 break;
 
-            case 5: break;
+            case 5:
+                atras = true;
+                break;
         }
 
+        if( !atras ){
+            system("pause");
+            system("cls");
+        }
 
-    }while(!opcionValida);
+    }while(!atras);
+
 }
 
 
@@ -131,10 +230,10 @@ void menu( DatosPaises paises[], DatosTotalVotos totalesAnios[] ){
 
     bool datosInicializados = false;
     bool totalesActualizados = false;
-    int eleccion;
+    bool seguir = true;
 
-    int cantPaises = 0;
-    int cantAnios = 0;
+    int cantPaises;
+    int cantAnios;
 
 
     do{
@@ -148,14 +247,12 @@ void menu( DatosPaises paises[], DatosTotalVotos totalesAnios[] ){
         printf("5. Reportes\n");
         printf("6. Salir\n\n\n");
 
-        eleccion = pedirEntero(1, 6);
+        printf("Opci\242n: ");
 
-
-        switch (eleccion) {
+        switch (pedirEntero(1, 6)) {
             case 1:
-                datosInicializados = menuInicializarDatos(paises, &cantPaises, &cantAnios);
+                menuInicializarDatos(paises, &cantPaises, &cantAnios, &datosInicializados, &totalesActualizados);
                 totalesActualizados = false;
-                system("pause");
                 break;
 
 
@@ -171,7 +268,6 @@ void menu( DatosPaises paises[], DatosTotalVotos totalesAnios[] ){
                 }
                 else
                     printf("ERROR: inicialice los datos\n\n");
-                system("pause");
                 break;
 
 
@@ -181,7 +277,7 @@ void menu( DatosPaises paises[], DatosTotalVotos totalesAnios[] ){
                     mostrarTablaPaises(paises, cantPaises, cantAnios);
                 else
                     printf("ERROR: actualice los datos.\n\n");
-                system("pause");
+
                 break;
 
             case 4:
@@ -189,7 +285,6 @@ void menu( DatosPaises paises[], DatosTotalVotos totalesAnios[] ){
                     mostrarTablaAnios(totalesAnios, cantAnios);
                 else
                     printf("ERROR: actualice los datos\n\n");
-                system("pause");
                 break;
 
             case 5:
@@ -197,14 +292,15 @@ void menu( DatosPaises paises[], DatosTotalVotos totalesAnios[] ){
                     menuReportes(paises, totalesAnios, cantPaises, cantAnios);
                 else
                     printf("ERROR: actualice los datos\n\n");
-                system("pause");
                 break;
 
-            case 6: break;
+            case 6:
+                seguir = false;
+                break;
         }
-
+        system("pause");
         system("cls");
-    }while( eleccion != 6 );
+    }while( seguir );
 
     printf("Programa desarrollado por Gerardo Fr\242meta Rubio.\n\n");
     system("pause");

@@ -10,6 +10,3 @@ int main(void){
     return 0;
 }
 
-////////////falta histograma con %
-////////////falta crear variable de totales
-////////////falta excel

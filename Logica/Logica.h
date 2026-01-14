@@ -19,7 +19,7 @@ void inicializarAutomatico( DatosPaises paises[], int cantPaises, int anios );
 
 //actualización
 void actualizarPaises(DatosPaises paises[], int cantFija, int cantLibre);
-void actualizarAnios(DatosPaises paises[], DatosTotalVotos totalesAnios[], int cantFija, int cantLibre);
+void actualizarAnios(DatosPaises paises[], DatosTotalVotos totalesAnios[], DatosTotalVotos *totalesGenerales, int cantFija, int cantLibre);
 
 //reportes
 int encontrarHanVotadoContra( DatosPaises paises[], int posSalidas[], int cantPaises);

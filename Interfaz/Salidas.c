@@ -35,12 +35,12 @@ int pedirEntero(int limInferior, int limSuperior){
                 numeroValido = true;
 
             else if(limInferior == limSuperior)
-                printf("ERROR: el \243nico valor que puede ingresar es %d.\n", limInferior);
+                printf("\aERROR: el \243nico valor que puede ingresar es %d.\n", limInferior);
             else
-                printf("ERROR: debe ingresar un valor entre %d y %d.\n", limInferior, limSuperior);
+                printf("\aERROR: debe ingresar un valor entre %d y %d.\n", limInferior, limSuperior);
         }
         else
-            printf("ERROR: debe ingresar un n\243mero entero.\n");
+            printf("\aERROR: debe ingresar un n\243mero entero.\n");
 
         if(!numeroValido) printf("Int\202ntelo nuevamente: ");
 
@@ -72,22 +72,22 @@ bool validarNombrePais( DatosPaises paises[], char cadena[], int cantPaises, int
 
 
     if( tamanio < 2)
-        printf("ERROR: debe ingresar al menos 2 caracteres.\n\n");
+        printf("\aERROR: debe ingresar al menos 2 caracteres.\n\n");
 
     else if( tieneSimbolos(cadena, tamanio) )
-        printf("ERROR: la cadena solo puede tener letras (omita la tildes en may\243sculas).\n\n");
+        printf("\aERROR: la cadena solo puede tener letras (omita la tildes en may\243sculas).\n\n");
 
     else if( sonSiglas && !esTodoMayuscula(cadena, tamanio))
-        printf("ERROR: si ingresa menos de 4 caracteres se concideran siglas y deben ser escritas en may\243scula.\n\n");
+        printf("\aERROR: si ingresa menos de 4 caracteres se concideran siglas y deben ser escritas en may\243scula.\n\n");
 
     else if( tamanio > maxLetras )
-        printf("ERROR: debe ingresar a lo sumo %d caracteres.\n\n", maxLetras);
+        printf("\aERROR: debe ingresar a lo sumo %d caracteres.\n\n", maxLetras);
 
     else if( !sonSiglas && !cadenaNormalizada(cadena, tamanio) )
-        printf("ERROR: debe usar may\243scula despu\202s de los espacios y min\243sculas en el resto del nombre.\n\n");
+        printf("\aERROR: debe usar may\243scula despu\202s de los espacios y min\243sculas en el resto del nombre.\n\n");
 
     else if( seHaIngresadoElPais(paises, cadena, cantPaises ) )
-        printf("ERROR: ya ha ingresado este pa\241s.\n\n");
+        printf("\aERROR: ya ha ingresado este pa\241s.\n\n");
 
     else valido = true;
 
@@ -125,7 +125,7 @@ int pedirNombresPaises( DatosPaises paises[], int maxLetras ){
 
 
 
-    printf("Introduzca los nombres de los pa\241ses (FIN para terminar):\n\n");
+    printf("\n\nIntroduzca los nombres de los pa\241ses (FIN para terminar):\n\n");
     do{
 
         do{
@@ -181,7 +181,7 @@ bool tomarNombreUnPais( DatosPaises paises[], int pais, int cantPaises ){
 
 
 
-    printf("Introduzca FIN si no desea realizar la acci\242n.\n\n");
+    printf("\n\nIntroduzca FIN si no desea realizar la acci\242n.\n\n");
     do{
         printf("Pa\241s: ");
 
@@ -241,7 +241,7 @@ bool tomarDecision(void){
 
         else{
             decisionValida = false;
-            printf("ERROR: solo puede ingresar SI o NO.\n\n");
+            printf("\aERROR: solo puede ingresar SI o NO.\n\n");
         }
 
     }while(!decisionValida);
@@ -278,7 +278,7 @@ void tomarVotosAnio( DatosPaises paises[], int cantPaises, int anio ){
     encabezado();
     tiposDeVotos();
 
-    printf("Introduzca los votos del a\244o %d:\n\n", anio + 1992);
+    printf("\n\nIntroduzca los votos del a\244o %d:\n\n", anio + 1992);
 
     for(i = 0; i < cantPaises; i++){
         printf("%17s: ", paises[i].nombre);
@@ -300,7 +300,7 @@ void tomarVotosPais( DatosPaises paises[], int cantAnios, int pais){
     encabezado();
     tiposDeVotos();
 
-    printf("Introduzca los votos de %s hasta %d:\n\n", paises[pais].nombre, cantAnios + 1991);
+    printf("\n\nIntroduzca los votos de %s hasta %d:\n\n", paises[pais].nombre, cantAnios + 1991);
 
     for(i = 0; i < cantAnios; i++){
         printf("%d: ", i+1992);
@@ -371,6 +371,7 @@ int pedirPais( DatosPaises paises[], int cantPaises, bool mostrarOpciones ){
     for(i = 0; i < cantPaises && mostrarOpciones; i++)
         printf("%3d. %s\n", i+1, paises[i].nombre);
     printf("\n\n");
+
     printf("Pa\241s: ");
 
 
@@ -400,17 +401,6 @@ int pedirAnio( int cantAnios ){
 
 
 
-
-
-
-
-
-
-void resultadoReporteCantidades(int aFavor, int enContra, int abstenciones){
-    printf("\tA favor: %d\n", aFavor);
-    printf("\tEn contra: %d\n", enContra);
-    printf("\tAbstenciones: %d\n\n", abstenciones);
-}
 
 
 
@@ -503,7 +493,7 @@ void mostrarTablaPaises( DatosPaises paises[], int cantPaises, int cantAnios ){
 
 
 
-void mostrarTablaAnios( DatosTotalVotos totales[], int cantAnios ){
+void mostrarTablaAnios( DatosTotalVotos totales[], DatosTotalVotos totalesGenerales, int cantAnios ){
 
     int i, j;
 
@@ -525,6 +515,13 @@ void mostrarTablaAnios( DatosTotalVotos totales[], int cantAnios ){
 
 
         }
+
+        if(!i) printf("%-12s ", "TOTAL");
+        else if(i == 1) printf("%5d", totalesGenerales.aFavor);
+        else if(i == 2) printf("%5d", totalesGenerales.enContra);
+        else if(i == 3) printf("%5d", totalesGenerales.abstenciones);
+
+
         printf("\n");
     }
 
@@ -534,6 +531,57 @@ void mostrarTablaAnios( DatosTotalVotos totales[], int cantAnios ){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//esta función redondea la cantidad de *s con el mayor múltiplo de 5 menor o igual que cada porciento
+void resultadoReporteCantidades( DatosTotalVotos votos, int cantVotos ){
+
+    int aFavor = votos.aFavor;
+    int enContra = votos.enContra;
+    int abstenciones = votos.abstenciones;
+
+
+    float porcientoAFavor = (float) aFavor / cantVotos *100;
+    float porcientoEnContra = (float) enContra / cantVotos *100;
+    float porcientoAbstenciones = (float) abstenciones / cantVotos *100;
+
+
+    printf("\tA favor: %d\n", aFavor);
+    printf("\tEn contra: %d\n", enContra);
+    printf("\tAbstenciones: %d\n\n", abstenciones);
+
+
+    int i;
+    for(i = 20; 0 < i; i--){
+
+        if(!(i % 2)) printf("%3d|", i*5);
+        else printf("   |");
+
+        printf("%20c", porcientoAFavor >= i*5 ? '*' : ' ');
+        printf("%20c", porcientoEnContra >= i*5 ? '*' : ' ');
+        printf("%20c\n", porcientoAbstenciones >= i*5  ? '*' : ' ');
+    }
+
+
+    printf("  0|================================================================\n");
+    printf("    %20s%20s%20s\n", "A FAVOR", "EN CONTRA", "ABSTENCIONES");
+    printf("     %18.2f%% %18.2f%% %18.2f%%\n", porcientoAFavor, porcientoEnContra, porcientoAbstenciones);
+
+}
 
 
 

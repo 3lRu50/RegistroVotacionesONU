@@ -9,7 +9,7 @@ bool validarNombrePais( DatosPaises paises[], char cadena[], int cantPaises, int
 
 //solicitar datos
 int pedirEntero(int limInferior, int limSuperior);
-int pedirPais( DatosPaises paises[], int cantPaises );
+int pedirPais( DatosPaises paises[], int cantPaises, bool mostrarOpciones );
 int pedirAnio( int cantAnios );
 int pedirNombresPaises( DatosPaises paises[], int maxLetras );
 int tomarVotos( DatosPaises paises[], int cantPaises );
@@ -19,12 +19,13 @@ bool tomarNombreUnPais( DatosPaises paises[], int pais, int cantPaises );
 bool tomarDecision(void);
 
 //reportes
-void resultadoReporteCantidades(int aFavor, int enContra, int abstenciones);
+void resultadoReporteCantidades( DatosTotalVotos votos, int cantVotos );
 void resultadoReporteListas( DatosPaises paises[], int salidas[], int cantSalidas, int reporte );
+void diagrama( DatosTotalVotos totalesGenerales, int totalVotos );
 
 //tablas
 void mostrarTablaPaises( DatosPaises paises[], int cantPaises, int cantAnios );
-void mostrarTablaAnios( DatosTotalVotos totales[], int cantAnios);
+void mostrarTablaAnios( DatosTotalVotos totales[], DatosTotalVotos totalesGenerales, int cantAnios);
 
 
 

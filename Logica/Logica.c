@@ -279,12 +279,15 @@ void actualizarPaises(DatosPaises paises[], int cantPaises, int cantAnios){
 
 
 //recorre columnas
-void actualizarAnios(DatosPaises paises[], DatosTotalVotos totalesAnios[], int cantPaises, int cantAnios){
+void actualizarAnios(DatosPaises paises[], DatosTotalVotos totalesAnios[], DatosTotalVotos *totalesGenerales, int cantPaises, int cantAnios){
 
     int aFavor, enContra, abstenciones;
     int voto;
     int i, j;
 
+    totalesGenerales->aFavor = 0;
+    totalesGenerales->enContra = 0;
+    totalesGenerales->abstenciones = 0;
 
     for(i = 0; i < cantAnios; i++){
         aFavor = enContra = abstenciones = 0;
@@ -301,6 +304,10 @@ void actualizarAnios(DatosPaises paises[], DatosTotalVotos totalesAnios[], int c
         totalesAnios[i].aFavor = aFavor;
         totalesAnios[i].enContra = enContra;
         totalesAnios[i].abstenciones = abstenciones;
+
+        totalesGenerales->aFavor += aFavor;
+        totalesGenerales->enContra += enContra;
+        totalesGenerales->abstenciones += abstenciones;
     }
 
 }

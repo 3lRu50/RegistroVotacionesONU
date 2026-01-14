@@ -14,6 +14,8 @@ int pedirAnio( int cantAnios );
 int pedirNombresPaises( DatosPaises paises[], int maxLetras );
 int tomarVotos( DatosPaises paises[], int cantPaises );
 void tomarVotosAnio( DatosPaises paises[], int ptrCantPaises, int anio );
+void tomarVotosPais( DatosPaises paises[], int cantAnios, int pais);
+bool tomarNombreUnPais( DatosPaises paises[], int pais, int cantPaises );
 bool tomarDecision(void);
 
 //reportes
@@ -23,3 +25,7 @@ void resultadoReporteListas( DatosPaises paises[], int salidas[], int cantSalida
 //tablas
 void mostrarTablaPaises( DatosPaises paises[], int cantPaises, int cantAnios );
 void mostrarTablaAnios( DatosTotalVotos totales[], int cantAnios);
+
+
+
+void tiposDeVotos(void);

@@ -7,9 +7,11 @@ bool esEntero(char cadena[]);
 //validación letras
 bool tieneSimbolos(char cadena[], int longitud);
 bool cadenaNormalizada(char cadena[], int tamanio);
-bool seHaIngresadoPais(DatosPaises paises[], char pais[], int cantPaises);
-bool todoMayuscula(char cadena[], int tamanio);
+bool seHaIngresadoElPais(DatosPaises paises[], char pais[], int cantPaises);
+bool esTodoMayuscula(char cadena[], int tamanio);
 
+
+void eliminarPais( DatosPaises paises[], int pais, int* ptrCantPaises);
 
 
 //inicialización

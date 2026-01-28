@@ -1,9 +1,9 @@
-#include "Interfaz/Menu.h"
+#include <Interfaz/Menu.h>
 
 int main(void){
 
-    DatosPaises paises[200];
-    DatosTotalVotos anios[50];
+    DatosPaises paises[MAX_PAISES];
+    DatosTotalVotos anios[MAX_ANIOS];
 
     menu( paises, anios );
 

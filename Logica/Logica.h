@@ -1,5 +1,5 @@
 #include <stdbool.h>
-#include "Logica/Datos.h"
+#include <Logica/Datos.h>
 
 //validación números
 bool esEntero(char cadena[]);

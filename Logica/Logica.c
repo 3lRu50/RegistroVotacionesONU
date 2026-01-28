@@ -1,4 +1,4 @@
-#include "Datos.h"
+#include <logica/Datos.h>
 #include <string.h>
 #include <stdbool.h>
 #include <ctype.h>
@@ -13,7 +13,7 @@ bool esEntero(char cadena[]){
     int tamanio = strlen(cadena);
 
 
-    if( (cadena[0] == '-'  && isdigit(cadena[1])) || isdigit(cadena[0]) ){
+    if( isdigit(cadena[0]) || cadena[0] == '-' ){
 
         for(i = 1; i < tamanio && valido; i++)
             if( !isdigit(cadena[i]) )
@@ -65,7 +65,7 @@ bool tieneSimbolos(char cadena[], int longitud){
 }
     ///los valores (como -92) que uso, los obtuve como sigue:
     ///
-    ///char cadena[];
+    ///char cadena[20];
     ///
     ///gets(entrada);
     ///printf("%d ", entrada[0]);
@@ -96,7 +96,7 @@ bool cadenaNormalizada(char cadena[], int tamanio){
     for(i = 0; i < tamanio && normalizado; i++)
 
         //comprueba que haya una mayuscula después del espacio
-        if( &cadena[i] == posEspacio )
+        if( cadena+i == posEspacio )
             if( isupper(cadena[i+1]) ){
                 posInicioUltiPalabra = i+1;
                 posEspacio = strchr( posEspacio+1, ' ');
@@ -161,16 +161,16 @@ bool seHaIngresadoElPais(DatosPaises paises[], char pais[], int cantPaises){
 
 
 
-
+//antes usaba islower, cosa que es incorrecta ya que con espacios no funcionaba
 bool esTodoMayuscula(char cadena[], int tamanio){
-    bool siglas = true;
+    bool mayusculas = true;
     int i;
 
-    for(i = 0; i < tamanio; i++)
-        if( islower(cadena[i]) )
-            siglas = false;
+    for(i = 0; i < tamanio && mayusculas; i++)
+        if( !isupper(cadena[i]) )
+            mayusculas = false;
 
-    return siglas;
+    return mayusculas;
 }
 
 
@@ -206,7 +206,7 @@ void eliminarPais( DatosPaises paises[], int pais, int* ptrCantPaises){
 void inicializarAutomatico( DatosPaises paises[], int cantPaises, int anios ){
 
     int i, j;
-    char nombres[15][18] = {
+    char nombres[MAX_INICI_MANO][TAM_ARR_CHAR+1] = {
         "Cuba", "USA", "Rusia", "Israel", "Alemania",
         "Jap\242n", "Francia", "Hungr\241a", "Mali", "Congo",
         "Corea del Norte", "Corea del Sur", "Chile", "Argentina", "China"

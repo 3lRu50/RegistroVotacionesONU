@@ -1,0 +1,1 @@
+Este proyecto fue el presentado como parte de la evaluación final del curso de Introducción a la Programación, impartido para la carrera de Ingeniería Informática, en la CUJAE, primer semestre. Este es desarrollado completamente en C con el IDE Qt.
